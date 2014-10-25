@@ -477,3 +477,42 @@ a('This is a terribly long description youll ' +
   b();
   c();
 });
+
+if (
+  array.some(function(){
+    return true;
+  })
+) {
+a++; // ->
+  b++;
+    c++; // <-
+}
+
+function c(d) {
+  return {
+    e: function(f, g) {
+    }
+  };
+}
+
+function a(b) {
+  switch(x) {
+    case 1:
+      if (foo) {
+        return 5;
+      }
+  }
+}
+
+function a(b) {
+  switch(x) {
+    case 1:
+      c;
+  }
+}
+
+function a(b) {
+  switch(x) {
+    case 1: c;
+  }
+}

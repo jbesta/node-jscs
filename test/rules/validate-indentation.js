@@ -98,7 +98,106 @@ describe('rules/validate-indentation', function() {
             461,
             462,
             467,
-            472
+            472,
+            486,
+            488
         ]);
+    });
+
+    describe('switch identation', function() {
+        beforeEach(function() {
+            checker.configure({ validateIndentation: 4 });
+        });
+
+        it('should not report errors for indent when return statement is used instead of break', function() {
+            assert(
+                checker.checkString(
+                    'function foo() {\n' +
+                    '    var a = "a";\n' +
+                    '    switch(a) {\n' +
+                    '        case "a":\n' +
+                    '            return "A";\n' +
+                    '        case "b":\n' +
+                    '            return "B";\n' +
+                    '    }\n' +
+                    '}\n' +
+                    'foo();'
+                ).getErrorCount() === 0
+            );
+        });
+
+        it('should report errors for indent after no indent in same switch statement', function() {
+            assert(
+                checker.checkString(
+                    'switch(value){\n' +
+                        '    case "1":\n' +
+                        '    break;\n' +
+                        '    case "2":\n' +
+                        '    break;\n' +
+                        '    default:\n' +
+                        '        break;\n' +
+                        '}'
+                ).getErrorCount() === 1
+            );
+        });
+
+        it('should report errors for no indent after indent in same switch statement', function() {
+            assert(
+                checker.checkString(
+                    'switch(value){\n' +
+                        '    case "1":\n' +
+                        '        break;\n' +
+                        '    case "2":\n' +
+                        '        break;\n' +
+                        '    default:\n' +
+                        '    break;\n' +
+                        '}'
+                ).getErrorCount() === 1
+            );
+        });
+
+        it('should report errors for no indent after indent in different switch statements', function() {
+            assert(
+                checker.checkString(
+                    'switch(value){\n' +
+                        '    case "1":\n' +
+                        '    case "2":\n' +
+                        '        break;\n' +
+                        '    default:\n' +
+                        '        break;\n' +
+                        '}\n' +
+                        'switch(value){\n' +
+                        '    case "1":\n' +
+                        '    break;\n' +
+                        '    case "2":\n' +
+                        '    break;\n' +
+                        '    default:\n' +
+                        '    break;\n' +
+                        '}'
+                ).getErrorCount() === 3
+            );
+        });
+
+        it('should report errors for indent after no indent in different switch statements', function() {
+            assert(
+                checker.checkString(
+                    'switch(value){\n' +
+                        '    case "1":\n' +
+                        '    case "2":\n' +
+                        '    break;\n' +
+                        '    default:\n' +
+                        '    break;\n' +
+                        '}\n' +
+                        'switch(value){\n' +
+                        '    case "1":\n' +
+                        '        break;\n' +
+                        '    case "2":\n' +
+                        '        break;\n' +
+                        '    default:\n' +
+                        '        break;\n' +
+                        '}'
+                ).getErrorCount() === 3
+            );
+        });
     });
 });

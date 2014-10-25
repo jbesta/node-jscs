@@ -9,6 +9,21 @@ JSCS — JavaScript Code Style.
 
 **This is a documentation for the development version, please refer to the https://www.npmjs.org/package/jscs instead**
 
+## Table of Contents
+
+- [Presets](#presets)
+- [Friendly Packages](#friendly-packages)
+- [Extensions](#extensions)
+- [Installation](#installation)
+- [CLI](#cli)
+- [Options](#options)
+- [Error Suppression](#error-suppression)
+- [Versioning & Semver](#versioning--semver)
+- [Rules](#rules)
+- [Removed Rules](#removed-rules)
+- [Browser Usage](#browser-usage)
+- [How to Contribute](https://github.com/jscs-dev/node-jscs/blob/master/CONTRIBUTING.md)
+
 ## Presets
 
  * [Airbnb](presets/airbnb.json) - https://github.com/airbnb/javascript
@@ -63,7 +78,7 @@ Allows to define path to the config file.
 jscs path[ path[...]] --config=./.config.json
 ```
 
-If there is no `--config` option specified, `jscs` it will consequentially search for `jscsConfig` option in `package.json` file then for `.jscsrc` and `.jscs.json` files in the current working directory then in nearest ancestor until it hits the system root.
+If there is no `--config` option specified, `jscs` it will consequentially search for `jscsConfig` option in `package.json` file then for `.jscsrc` (which is a just JSON with comments) and `.jscs.json` files in the current working directory then in nearest ancestor until it hits the system root.
 
 ### `--preset`
 If defined will use predefined rules for specific code style.
@@ -82,8 +97,14 @@ But you also can specify your own reporter, since this flag accepts relative or 
 jscs path[ path[...]] --reporter=./some-dir/my-reporter.js
 ```
 
+### `--esnext`
+Attempts to parse your code as ES6 using the harmony version of the esprima parser. Please note that this is currently experimental, and will improve over time.
+
 ### `--no-colors`
 Clean output without colors.
+
+### `--max-errors`
+Set the maximum number of errors to report
 
 ### `--help`
 Outputs usage information.
@@ -166,6 +187,34 @@ Values: A single file extension or an Array of file extensions, beginning with a
 "fileExtensions": [".js"]
 ```
 
+### maxErrors
+
+Set the maximum number of errors to report
+
+Type: `Number`
+
+Default: Infinity
+
+#### Example
+
+```js
+"maxErrors": 10
+```
+
+### esnext
+
+Attempts to parse your code as ES6 using the harmony version of the esprima parser.
+
+Type: `Boolean`
+
+Value: `true`
+
+#### Example
+
+```js
+"esnext": true
+```
+
 ## Error Suppression
 
 ### Inline Comments
@@ -216,6 +265,27 @@ if (z['a']) a(); // all errors from requireDotNotation, but not requireCurlyBrac
 if (z['a']) a(); // all errors will be reported
 ```
 
+## Versioning & Semver
+
+We recommend installing JSCS via NPM using `^`, or `~` if you want more stable releases.
+
+Semver (http://semver.org/) dictates that breaking changes be major version bumps. In the context of a linting tool, a bug fix that causes more errors to be reported can be interpreted as a breaking change. However, that would require major version bumps to occur more often than can be desirable. Therefore, as a compromise, we will only release bug fixes that cause more errors to be reported in minor versions.
+
+Below you fill find our versioning strategy, and what you can expect to come out of a new JSCS release.
+
+ * Patch release:
+   * A bug fix in a rule that causes JSCS to report less errors.
+   * Docs, refactoring and other "invisible" changes for user;
+ * Minor release:
+   * Any preset changes.
+   * A bug fix in a rule that causes JSCS to report more errors.
+   * New rules or new options for existing rules that don't change existing behavior.
+   * Modifying rules so they report less errors, and don't cause build failures.
+ * Major release:
+   * Purposefully modifying existing rules so that they report more errors or change the meaning of a rule.
+   * Any architectural changes that could cause builds to fail.
+
+
 ## Rules
 
 ### requireCurlyBraces
@@ -225,20 +295,6 @@ Requires curly braces after statements.
 Type: `Array` or `Boolean`
 
 Values: Array of quoted keywords or `true` to require curly braces after the following keywords:
-
-```js
-[
-    'if',
-    'else',
-    'for',
-    'while',
-    'do',
-    'try',
-    'catch',
-    'case',
-    'default'
-]
-```
 
 JSHint: [`curly`](http://jshint.com/docs/options/#curly)
 
@@ -270,6 +326,40 @@ if (x) {
 
 ```js
 if (x) x++;
+```
+
+### requireSpaceBeforeKeywords
+
+Requires space before keyword.
+
+Type: `Array` or `Boolean`
+
+Values: Array of quoted keywords or `true` to require all possible keywords to have a preceding space.
+
+#### Example
+
+```js
+"requireSpaceBeforeKeywords": [
+    "else",
+    "while",
+    "catch"
+]
+```
+
+##### Valid
+
+```js
+} else {
+    x++;
+}
+```
+
+##### Invalid
+
+```js
+}else {
+    x++;
+}
 ```
 
 ### requireSpaceAfterKeywords
@@ -346,6 +436,39 @@ if(x > y) {
 }
 ```
 
+
+### disallowSpaceBeforeKeywords
+
+Disallows space before keyword.
+
+Type: `Array` or `Boolean`
+
+Values: Array of quoted keywords or `true` to disallow spaces before all possible keywords.
+
+#### Example
+
+```js
+"disallowSpaceBeforeKeywords": [
+    "else",
+    "catch"
+]
+```
+
+##### Valid
+
+```js
+}else {
+    y--;
+}
+```
+
+##### Invalid
+
+```js
+} else {
+    y--;
+}
+```
 
 ### requireSpaceBeforeBlockStatements
 
@@ -696,14 +819,14 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-function a () {}
+var x = function a () {}
 ```
 
 ##### Invalid
 
 ```js
-function a() {}
-function a(){}
+var x = function a() {}
+var x = function a(){}
 ```
 
 
@@ -1119,6 +1242,74 @@ if (true) {
 }
 ```
 
+### requirePaddingNewLinesInObjects
+
+Requires newline inside curly braces of all objects.
+
+Type: `Boolean`
+
+Values: `true`
+
+#### Example
+
+```js
+"requirePaddingNewLinesInObjects": true
+```
+
+##### Valid
+
+```js
+var x = {
+    a: 1
+};
+foo({
+    a: {
+        b: 1
+    }
+});
+```
+
+##### Invalid
+
+```js
+var x = { a: 1 };
+foo({a:{b:1}});
+```
+
+### disallowPaddingNewLinesInObjects
+
+Disallows newline inside curly braces of all objects.
+
+Type: `Boolean`
+
+Values: `true`
+
+#### Example
+
+```js
+"disallowPaddingNewLinesInObjects": true
+```
+
+##### Valid
+
+```js
+var x = { a: 1 };
+foo({a: {b: 1}});
+```
+
+##### Invalid
+
+```js
+var x = {
+    a: 1
+};
+foo({
+    a: {
+        b: 1
+    }
+});
+```
+
 ### disallowEmptyBlocks
 
 Disallows empty blocks (except for catch blocks).
@@ -1397,6 +1588,7 @@ Disallows identifiers that start or end in `_`, except for some popular exceptio
  - `_` (underscore.js)
  - `__filename` (node.js global)
  - `__dirname` (node.js global)
+ - `super_` (node.js, used by [`util.inherits`](http://nodejs.org/docs/latest/api/util.html#util_util_inherits_constructor_superconstructor))
 
 Type: `Boolean`
 
@@ -2482,16 +2674,20 @@ if (1 == a) {
 
 ### requireSpaceAfterLineComment
 
-Requires that a line comment (`//`) be followed by a space or slash space (`/// `).
+Requires that a line comment (`//`) be followed by a space.
 
-Type: `Boolean` or `String`
+Type: `Boolean` or `Object` or `String`
 
-Values: `true` or `'allowSlash'`
+Values:
+ - `true`
+ - `"allowSlash"` (*deprecated* use `"except": ["/"]`) allows `/// ` format
+ - `Object`:
+    - `allExcept`: array of allowed strings before space `//(here) `
 
 #### Example
 
 ```js
-"requireSpaceAfterLineComment": true
+"requireSpaceAfterLineComment": { "allExcept": ["#", "="] }
 ```
 
 ##### Valid
@@ -2499,6 +2695,8 @@ Values: `true` or `'allowSlash'`
 ```js
 // A comment
 /*A comment*/
+//# sourceURL=filename.js
+//= require something
 ```
 
 ##### Invalid
@@ -3013,6 +3211,84 @@ function a(b, c) {}
 
 ```js
 function a(b , c) {}
+```
+
+### requireCapitalizedComments
+
+Requires the first alphabetical character of a comment to be uppercase
+
+Type: `Boolean`
+
+Value: `true`
+
+#### Example
+
+`requireCapitalizedComments: true`
+
+Valid:
+
+```
+// Valid
+//Valid
+
+/*
+  Valid
+ */
+
+/**
+ * Valid
+ */
+
+// 123 or any non-alphabetical starting character
+```
+
+Invalid:
+```
+// invalid
+//invalid
+/** invalid */
+/**
+ * invalid
+ */
+```
+
+### disallowCapitalizedComments
+
+Requires the first alphabetical character of a comment to be lowercase.
+
+Type: `String`
+
+Value: `true`
+
+#### Example
+
+`disallowCapitalizedComments: true`
+
+Valid:
+
+```
+// valid
+//valid
+
+/*
+  valid
+ */
+
+/**
+ * valid
+ */
+
+// 123 or any non-alphabetical starting character
+```
+
+Invalid:
+```
+// Invalid
+//Invalid
+/** Invalid */
+/**
+ * Invalid
+ */
 ```
 
 ### ~~validateJSDoc~~

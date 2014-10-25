@@ -1,3 +1,46 @@
+## Version 1.7.3
+ * Parsing: Use the harmony parser via the esnext flag in the config (Joel Kemp)
+ * validateIndentation: handle breakless case statements (Mike Sherov)
+
+## Version 1.7.2
+ * validateIndentation: fix return in switch failure (Mike Sherov)
+ * Cast StringChecker maxErrors property to Number the first time (Florian Fesseler)
+ * Fix format of --esnext and --max-errors in README (Joe Lencioni)
+
+## Version 1.7.1
+ * validateIndentation: fix empty multiline function body regression (Mike Sherov)
+
+## Version 1.7.0
+ * validateJSDoc: Deprecate rule (Joel Kemp)
+ * Updated google preset (Richard Poole)
+ * Add "requireSpaceBeforeBlockStatements" rule into the jquery preset (Oleg Gaidarenko)
+
+ * CLI: Support --esnext to Parse ES6. (Robert Jackson)
+ * CLI: Support a --max-errors option to limit the number of reported errors (mdevils)
+
+ * New Rules: (require|disallow)CapitalizedComments (Joel Kemp)
+ * New Rules: (require|disallow)SpacesInCallExpression (Mathieu Schroeter)
+ * New Rules: (disallow|require)FunctionDeclarations (Nikhil Benesch)
+ * New Rules: (require|disallow)PaddingNewLinesInObjects (Valentin Agachi)
+
+ * Implement "only" for parens rule (Oleg Gaidarenko)
+ * Simplify "allButNested" option for spaces rule (Oleg Gaidarenko)
+ * Implement "except" option for spaces rule (Oleg Gaidarenko)
+ * disallowMultipleVarDecl: Strict mode to disallow for statement exception (Joel Kemp)
+
+ * disallowSpaceBeforeObjectKeys: fix parenthesised property value (Jindrich Besta)
+ * requireSpaceBeforeObjectValues: fix parenthesised property value (Jindrich Besta)
+ * validateIndentation: Allow non-indented "break" in "switch" statement (kevin.destrem)
+ * ValidateIndentation: remove array and object indentation validation (Mike Sherov)
+ * validateIndentation: Allow the "if" test to be nested. (Jesper Birkestrøm)
+ * ValidateIndentation: Relax indentation rules for function expressions. (Mike Sherov)
+ * requireCurlyBraces: support the with statement (Joel Kemp)
+ * Fix invalid result of findXxxxToken methods when value is provided (Romain Guerin)
+ * requireSpaceAfterLineComment: skips msjsdoc comments (Alexej Yaroshevich)
+
+ * Docs: add a table of contents to README (Henry Zhu)
+ * Docs: Make version numbers real markdown headers (Alexander Artemenko)
+
 ## Version 1.6.2
  * Fix disallowMultipleLineBreaks with shebang line (Nicolas Gallagher)
  * Improve validateParameterSeparator rule (David Chambers)

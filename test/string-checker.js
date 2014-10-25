@@ -104,4 +104,101 @@ describe('modules/string-checker', function() {
             assert(error === undefined);
         });
     });
+
+    describe('maxErrors', function() {
+        beforeEach(function() {
+            checker.configure({
+                requireSpaceBeforeBinaryOperators: ['='],
+                maxErrors: 1
+            });
+        });
+
+        it('should allow a maximum number of reported errors to be set', function() {
+            var errors = checker.checkString('var foo=1;\n var bar=2;').getErrorList();
+            assert(errors.length === 1);
+        });
+
+        it('should not report more than the maximum errors across multiple checks', function() {
+            var errors = checker.checkString('var foo=1;\n var bar=2;').getErrorList();
+            var errors2 = checker.checkString('var baz=1;\n var qux=2;').getErrorList();
+            assert(errors.length === 1);
+            assert(errors2.length === 0);
+        });
+
+        it('should not be used when not a number', function() {
+            var errors;
+            checker.configure({
+                requireSpaceBeforeBinaryOperators: ['='],
+                maxErrors: NaN
+            });
+
+            errors = checker.checkString('var foo=1;\n var bar=2;').getErrorList();
+            assert(errors.length > 0);
+        });
+    });
+
+    describe('esprima version', function() {
+        var customDescription = 'in no way a real error message';
+        var customEsprima = {
+            parse: function() {
+                var error = new Error();
+                error.description = customDescription;
+
+                throw error;
+            }
+        };
+
+        it('uses a custom esprima when provided to the constructor', function() {
+            checker = new Checker({ esprima: customEsprima });
+            checker.registerDefaultRules();
+
+            var errors = checker.checkString('import { foo } from "bar";');
+            var error = errors.getErrorList()[0];
+
+            assert(error.rule === 'parseError');
+            assert(error.message === customDescription);
+        });
+
+        it('uses a custom esprima when both esprima and esnext are provided to the constructor', function() {
+            checker = new Checker({ esprima: customEsprima, esnext: true });
+            checker.registerDefaultRules();
+
+            var errors = checker.checkString('import { foo } from "bar";');
+            var error = errors.getErrorList()[0];
+
+            assert(error.rule === 'parseError');
+            assert(error.message === customDescription);
+        });
+
+        it('uses the harmony esprima when true is provided to the constructor', function() {
+            checker = new Checker({ esnext: true });
+            checker.registerDefaultRules();
+
+            var errors = checker.checkString('import { foo } from "bar";');
+            assert(errors.isEmpty());
+        });
+
+        it('uses the harmony esprima when esnext is set to true in the config', function() {
+            checker = new Checker();
+            checker.registerDefaultRules();
+            checker.configure({ esnext: true });
+
+            var errors = checker.checkString('import { foo } from "bar";');
+            // Make sure that multiple checks don't fail
+            var errors2 = checker.checkString('import { bar } from "foo";');
+            assert(errors.isEmpty());
+            assert(errors2.isEmpty());
+        });
+
+        it('uses the default esprima when falsely or no argument is provided to the constructor', function() {
+            checker = new Checker();
+            checker.registerDefaultRules();
+
+            var errors = checker.checkString('import { foo } from "bar";');
+            var error = errors.getErrorList()[0];
+
+            assert(error.rule === 'parseError');
+            assert(error.message !== customDescription);
+        });
+    });
 });
