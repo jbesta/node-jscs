@@ -1,8 +1,9 @@
 # node-jscs
 
+
 [![Build Status](https://travis-ci.org/jscs-dev/node-jscs.svg?branch=master)](https://travis-ci.org/jscs-dev/node-jscs) [![Coverage Status](https://img.shields.io/coveralls/jscs-dev/node-jscs.svg)](https://coveralls.io/r/jscs-dev/node-jscs?branch=master) [![Dependency Status](https://david-dm.org/jscs-dev/node-jscs.svg?theme=shields.io)](https://david-dm.org/jscs-dev/node-jscs) [![devDependency Status](https://david-dm.org/jscs-dev/node-jscs/dev-status.svg?theme=shields.io)](https://david-dm.org/jscs-dev/node-jscs#info=devDependencies)
 
-JSCS — JavaScript Code Style.
+JSCS — JavaScript Code Style. [Twitter](https://twitter.com/jscs_dev) | [Mailing List](https://groups.google.com/group/jscs-dev)
 
 
 `jscs` is a code style checker. You can configure `jscs` for your project in detail using **over 60** validation rules, including presets from popular style guides like jQuery.
@@ -488,15 +489,15 @@ Values: `true`
 
 ```js
 if (cond) {
-  foo();
+    foo();
 }
 
 for (var e in elements) {
-  bar(e);
+    bar(e);
 }
 
 while (cond) {
-  foo();
+    foo();
 }
 ```
 
@@ -504,15 +505,15 @@ while (cond) {
 
 ```js
 if (cond){
-  foo();
+    foo();
 }
 
 for (var e in elements){
-  bar(e);
+    bar(e);
 }
 
 while (cond){
-  foo();
+    foo();
 }
 ```
 
@@ -535,15 +536,15 @@ Values: `true`
 
 ```js
 if (cond){
-  foo();
+    foo();
 }
 
 for (var e in elements){
-  bar(e);
+    bar(e);
 }
 
 while (cond){
-  foo();
+    foo();
 }
 ```
 
@@ -551,15 +552,15 @@ while (cond){
 
 ```js
 if (cond) {
-  foo();
+    foo();
 }
 
 for (var e in elements) {
-  bar(e);
+    bar(e);
 }
 
 while (cond) {
-  foo();
+    foo();
 }
 ```
 
@@ -675,7 +676,7 @@ var a = b?c: d;
 
 ### requireSpacesInFunctionExpression
 
-Requires space before `()` or `{}` in function expressions (both named and anonymous).
+Requires space before `()` or `{}` in function expressions (both [named](#requirespacesinnamedfunctionexpression) and [anonymous](#requirespacesinanonymousfunctionexpression)).
 
 Type: `Object`
 
@@ -693,21 +694,21 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-function () {}
-function a () {}
+var x = function () {};
+var x = function a () {};
 ```
 
 ##### Invalid
 
 ```js
-function() {}
-function (){}
+var x = function() {};
+var x = function a(){};
 ```
 
 
 ### disallowSpacesInFunctionExpression
 
-Disallows space before `()` or `{}` in function expressions (both named and anonymous).
+Disallows space before `()` or `{}` in function expressions (both [named](#disallowspacesinnamedfunctionexpression) and [anonymous](#disallowspacesinanonymousfunctionexpression)).
 
 Type: `Object`
 
@@ -725,15 +726,15 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-function(){}
-function a(){}
+var x = function(){};
+var x = function a(){};
 ```
 
 ##### Invalid
 
 ```js
-function () {}
-function a (){}
+var x = function () {};
+var x = function a (){};
 ```
 
 
@@ -757,14 +758,21 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-function () {}
+var foo = function () {};
+var Foo = {
+    foo: function () {};
+}
+array.map(function () {});
 ```
 
 ##### Invalid
 
 ```js
-function() {}
-function (){}
+var foo = function() {};
+var Foo = {
+    foo: function (){};
+}
+array.map(function(){});
 ```
 
 
@@ -788,14 +796,21 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-function(){}
+var foo = function(){};
+var Foo = {
+    foo: function(){};
+}
+array.map(function(){});
 ```
 
 ##### Invalid
 
 ```js
-function () {}
-function (){}
+var foo = function () {};
+var Foo = {
+    foo: function (){};
+}
+array.map(function() {});
 ```
 
 
@@ -819,14 +834,14 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-var x = function a () {}
+var x = function a () {};
 ```
 
 ##### Invalid
 
 ```js
-var x = function a() {}
-var x = function a(){}
+var x = function a() {};
+var x = function a(){};
 ```
 
 
@@ -850,14 +865,14 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 ##### Valid
 
 ```js
-function a(){}
+var x = function a(){};
 ```
 
 ##### Invalid
 
 ```js
-function a () {}
-function a (){}
+var x = function a () {};
+var x = function a (){};
 ```
 
 
@@ -925,7 +940,7 @@ function a (){}
 
 ### requireSpacesInFunction
 
-Requires space before `()` or `{}` in function declarations and expressions.
+Requires space before `()` or `{}` in function [declarations](#requirespacesinfunctiondeclaration) and [expressions](#requirespacesinfunctionexpression).
 
 Type: `Object`
 
@@ -944,6 +959,8 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 
 ```js
 function a () {}
+
+var x = function a () {};
 ```
 
 ##### Invalid
@@ -951,12 +968,15 @@ function a () {}
 ```js
 function a() {}
 function a (){}
+
+var x = function a() {};
+var x = function a () {};
 ```
 
 
 ### disallowSpacesInFunction
 
-Disallows space before `()` or `{}` in function declarations and expressions.
+Disallows space before `()` or `{}` in function [declarations](#disallowspacesinfunctiondeclaration) and [expressions](#disallowspacesinfunctionexpression).
 
 Type: `Object`
 
@@ -975,6 +995,8 @@ Values: `"beforeOpeningRoundBrace"` and `"beforeOpeningCurlyBrace"` as child pro
 
 ```js
 function a(){}
+
+var x = function a(){};
 ```
 
 ##### Invalid
@@ -982,6 +1004,9 @@ function a(){}
 ```js
 function a () {}
 function a (){}
+
+var x = function a () {};
+var x = function a (){};
 ```
 
 
@@ -1045,7 +1070,11 @@ Disallows multiple `var` declaration (except for-loop).
 
 Type: `Boolean` or `String`
 
-Values: `true` or 'strict' (to disallow multiple variable declarations within a for loop)
+Values:
+
+- `true` disallows multiple variable declarations except within a for loop
+- `'strict'` disallows all multiple variable declarations
+- `'exceptUndefined'` allows declarations where all variables are not defined
 
 #### Example
 
@@ -1053,9 +1082,26 @@ Values: `true` or 'strict' (to disallow multiple variable declarations within a 
 "disallowMultipleVarDecl": true
 ```
 
-##### Valid
+##### Valid for `true`
 
 ```js
+var x = 1;
+var y = 2;
+
+for (var i = 0, j = arr.length; i < j; i++) {}
+```
+
+##### Valid for `strict`
+
+```js
+var x = 1;
+var y = 2;
+```
+
+##### Valid for `exceptUndefined`
+
+```js
+var a, b;
 var x = 1;
 var y = 2;
 
@@ -1067,6 +1113,8 @@ for (var i = 0, j = arr.length; i < j; i++) {}
 ```js
 var x = 1,
     y = 2;
+
+var x, y = 2, z;
 ```
 
 ### requireMultipleVarDecl
@@ -1308,6 +1356,134 @@ foo({
         b: 1
     }
 });
+```
+
+### requirePaddingNewlinesBeforeKeywords
+
+Requires an empty line above the specified keywords unless the keyword is the first expression in a block.
+
+Type: `Array` or `Boolean`
+
+Values: Array of quoted types or `true` to require padding new lines after all of the keywords below.
+
+#### Example
+
+```js
+"requirePaddingNewlinesBeforeKeywords": [
+    "do",
+    "for",
+    "if",
+    "else",
+    "switch",
+    "case",
+    "try",
+    "catch",
+    "void",
+    "while",
+    "with",
+    "return",
+    "typeof",
+    "function"
+]
+```
+
+##### Valid
+
+```js
+function(a) {
+    if (!a) {
+        return false;
+    }
+
+    for (var i = 0; i < b; i++) {
+        if (!a[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+```
+
+##### Invalid
+
+```js
+function(a) {
+    if (!a) {
+        return false;
+    }
+    for (var i = 0; i < b; i++) {
+        if (!a[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+### disallowPaddingNewlinesBeforeKeywords
+
+Disallow an empty line above the specified keywords.
+
+Type: `Array` or `Boolean`
+
+Values: Array of quoted types or `true` to disallow padding new lines after all of the keywords below.
+
+#### Example
+
+```js
+"requirePaddingNewlinesBeforeKeywords": [
+    "do",
+    "for",
+    "if",
+    "else",
+    "switch",
+    "case",
+    "try",
+    "catch",
+    "void",
+    "while",
+    "with",
+    "return",
+    "typeof",
+    "function"
+]
+```
+
+##### Valid
+
+```js
+function(a) {
+    if (!a) {
+        return false;
+    }
+    for (var i = 0; i < b; i++) {
+        if (!a[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+##### Invalid
+
+```js
+function(a) {
+    if (!a) {
+
+        return false;
+    }
+
+    for (var i = 0; i < b; i++) {
+        if (!a[i]) {
+
+            return false;
+        }
+    }
+
+    return true;
+}
 ```
 
 ### disallowEmptyBlocks
@@ -1583,33 +1759,39 @@ var x = {'a': 1};
 
 ### disallowDanglingUnderscores
 
-Disallows identifiers that start or end in `_`, except for some popular exceptions:
+Disallows identifiers that start or end in `_`. Some popular identifiers are automatically listed as exceptions:
 
+ - `__proto__` (javascript)
  - `_` (underscore.js)
  - `__filename` (node.js global)
  - `__dirname` (node.js global)
  - `super_` (node.js, used by [`util.inherits`](http://nodejs.org/docs/latest/api/util.html#util_util_inherits_constructor_superconstructor))
 
-Type: `Boolean`
+Type: `Boolean` or `Object`
 
-Values: `true`
+Values:
+ - `true`
+ - `Object`:
+    - `allExcept`: array of quoted identifiers
 
 JSHint: [`nomen`](http://www.jshint.com/docs/options/#nomen)
 
 #### Example
 
 ```js
-"disallowDanglingUnderscores": true
+"disallowDanglingUnderscores": { allExcept: ["_exception"] }
 ```
 
 ##### Valid
 
 ```js
 var x = 1;
+var o = obj.__proto__;
 var y = _.extend;
 var z = __dirname;
 var w = __filename;
 var x_y = 1;
+var v = _exception;
 ```
 
 ##### Invalid
@@ -2404,7 +2586,8 @@ Values:
 
 - `true`: validates all arrays and objects
 - `Object`:
-   - `ignoreSingleValue`: allows single property objects and single element arrays to not require a trailing comma
+    - `ignoreSingleValue`: allows single property objects and single element arrays to not require a trailing comma
+    - `ignoreSingleLine`: allows objects and arrays on a single line to not require a trailing comma
 
 #### Example
 
@@ -2424,6 +2607,13 @@ var bar = {a: "a", b: "b",}
 ```js
 var car = [1];
 var dar = {a: "a"};
+```
+
+##### Valid with ignoreSingleLine
+
+```js
+var car = [1, 2, 3];
+var dar = {a: "a", b: "b"};
 ```
 
 ##### Invalid
@@ -2630,7 +2820,7 @@ Values: `true`
 ##### Valid
 ```js
 if (1 == a) {
-  return
+    return
 }
 ```
 
@@ -2638,7 +2828,7 @@ if (1 == a) {
 
 ```js
 if (a == 1) {
-  return
+    return
 }
 ```
 
@@ -2660,7 +2850,7 @@ Values: `true`
 
 ```js
 if (a == 1) {
-  return
+    return
 }
 ```
 
@@ -2668,7 +2858,7 @@ if (a == 1) {
 
 ```js
 if (1 == a) {
-  return
+    return
 }
 ```
 
@@ -2793,7 +2983,7 @@ var a = function(){
 
 $('#foo').click(function(){
 
-};)
+})
 ```
 
 ##### Invalid
@@ -2805,7 +2995,7 @@ var a = function foo(){
 
 $('#foo').click(function bar(){
 
-};)
+});
 ```
 
 ### disallowFunctionDeclarations

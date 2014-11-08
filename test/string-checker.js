@@ -66,22 +66,18 @@ describe('modules/string-checker', function() {
 
             assert(false);
         } catch (e) {
-            assert(e.toString() === 'Error: Preset "not-exist" does not exist');
+            assert.equal(e.toString(), 'AssertionError: Preset "not-exist" does not exist');
         }
     });
 
     describe('rules registration', function() {
         it('should report rules in config which don\'t match any registered rules', function() {
-            var error;
-            try {
-                checker.configure({ disallowMulipleLineBreaks: true, disallowMultipleVarDelc: true });
-            } catch (e) {
-                error = e;
-            }
-            assert.equal(
-                error.message,
-                'Unsupported rules: disallowMulipleLineBreaks, disallowMultipleVarDelc'
-            );
+            checker.configure({ doesNotExist: true, noSuchRule: true });
+            var errors = checker.checkString('var foo = 1;').getErrorList();
+
+            assert(errors.length === 2);
+            assert.equal(errors[0].message, 'Unsupported rule: doesNotExist');
+            assert.equal(errors[1].message, 'Unsupported rule: noSuchRule');
         });
 
         it('should not report rules in config which match registered rules', function() {
@@ -143,6 +139,8 @@ describe('modules/string-checker', function() {
             parse: function() {
                 var error = new Error();
                 error.description = customDescription;
+                error.lineNumber = 1;
+                error.column = 0;
 
                 throw error;
             }
